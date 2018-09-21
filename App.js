@@ -1,17 +1,34 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-export default class App extends React.Component {
+import { createStackNavigator } from 'react-navigation';
+import Login from './components/Login';
+import Register from './components/Register';
+import IndexPage from './components/IndexPage';
+class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
+     <RootStack/>
     );
   }
 }
+
+const RootStack = createStackNavigator({
+  IndexPage : {
+    screen : IndexPage
+  },
+  Login : {
+    screen : Login
+  },
+  Register : {
+    screen : Register
+  },
+
+},
+{
+  headerMode : 'none'
+}
+
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -21,3 +38,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default App;
