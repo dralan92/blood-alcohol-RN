@@ -15,12 +15,14 @@ class IndexPage extends Component {
               }}>
               <TouchableOpacity
               style = {styles.login_button}
+              onPress={() => this.props.navigation.navigate('Login')}
               >
               <Text style = {styles.login_button_text}>Login</Text>
               </TouchableOpacity> 
 
               <TouchableOpacity
               style = {styles.register_button}
+              onPress={() => this.props.navigation.navigate('Register')}
               >
               <Text style = {styles.login_button_text}>Register</Text>
               </TouchableOpacity> 
