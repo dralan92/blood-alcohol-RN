@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation';
 import Login from './components/Login';
 import Register from './components/Register';
 import IndexPage from './components/IndexPage';
+import Home from './components/Home';
 class App extends React.Component {
   render() {
     return (
@@ -21,6 +22,9 @@ const RootStack = createStackNavigator({
   },
   Register : {
     screen : Register
+  },
+  Home : {
+    screen : Home
   },
 
 },

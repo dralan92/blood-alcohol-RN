@@ -43,7 +43,8 @@ class Register extends Component {
                     onChangeText={(text) => this.setState({age: text})}/>   
         <TouchableOpacity
               style = {styles.register_button}
-              onPress={() => this.drinkersRef.push(this.state)}
+              onPress={() => {this.drinkersRef.push(this.state);
+                            this.props.navigation.navigate('Home',this.state)}}
               >
               <Text style = {styles.login_button_text}>Register</Text>
         </TouchableOpacity>                      
