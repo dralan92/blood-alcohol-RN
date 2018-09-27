@@ -1,21 +1,27 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View ,ListView,TouchableOpacity,Button} from 'react-native';
-import firebaseApp from '../Firebase';
+import { StyleSheet, Text, View ,ListView,TouchableOpacity,Button,KeyboardAvoidingView} from 'react-native';
+
 
 class Home extends Component {
   constructor(){
     super();
-    this.drinkersRef = this.getRef().child('drinkers')
+   
     this.state = {
-      name : '',
-      email : '',
-      password : '',
-      gender : '',
-      weight : '',
-      age : '',
-      lob : 0,
-      goa : 0,
-      bac : 0
+        name : '',
+        email : '',
+        password : '',
+        phone : '',
+        age : '',
+        gender : '',
+        weight : '',
+        liters_of_blood : '',
+        grams_of_alcohol : 0,
+        alcohol_removal_rate : 0,
+        current_time : '',
+        last_drink_time : '',
+        time_past : '',
+        sober_time : '',
+        status : ''
 
     }
   }
@@ -23,74 +29,60 @@ class Home extends Component {
         title: 'Home',
     }
    
-    getRef(){
-      return firebaseApp.database().ref();
-    }
-    updateGOA(){
-      prev_goa = this.state.goa;
-      new_goa = prev_goa + 17.01;
-      this.setState({goa : new_goa});
-    }
-    updateStates(name,email,password,gender,age,liters_of_blood,grams_of_alcohol){
-      console.log(email);
-      this.setState({
-        name : name,
-        email : email,
-        password : password,
-        gender : gender,
+    componentWillMount(){
 
-        age : age,
-        liters_of_blood : liters_of_blood,
-        grams_of_alcohol : grams_of_alcohol,
+      const { navigation } = this.props;
+      
+
+      this.setState({
+
+        name : navigation.getParam('name', 'x'),
+        email : navigation.getParam('email', 'x'),
+        password : navigation.getParam('password', 'x'),
+        age : navigation.getParam('age', 'x'),
+        gender : navigation.getParam('gender', 'x'),
+        weight : navigation.getParam('weight', 'x'),
+        liters_of_blood : navigation.getParam('liters_of_blood', 'x'),
+        alcohol_removal_rate : navigation.getParam('alcohol_removal_rate', 'x')
 
       });
+
     }
-  render() {
-    const { navigation } = this.props;
-    const name = navigation.getParam('name', 'x');
-    const email = navigation.getParam('email', 'x');
-    const password = navigation.getParam('password', 'x');
-    const gender = navigation.getParam('gender', 'x');
-    const weight = navigation.getParam('weight', 'x');
-    const age = navigation.getParam('age', 'x');
+   
     
-    const liters_of_blood = (parseFloat(weight) * .07) / 1.060 ;
-    const grams_of_alcohol = this.state.goa;
+  render() {
+   
+    
 
     return (
-      <View>
-        <Text>hello {name}</Text>
-        <Text>you have  {liters_of_blood} liters of blood</Text>
+      <KeyboardAvoidingView behavior = 'padding' style = {styles.container}>
+        <Text>Hello {this.state.name}</Text>
+        <Text>you have  {this.state.liters_of_blood} liters of blood</Text>
+        <Text>your alcohol removal rate is  {this.state.alcohol_removal_rate} grams per milli second</Text>
 
         <TouchableOpacity
               style = {styles.register_button}
               onPress={() => {
-                              this.updateGOA();
-                              this.updateStates(name,email,password,gender,age,liters_of_blood,grams_of_alcohol);
-                              this.drinkersRef.push(this.state);
+                              
+                              
                             }
                       }
               >
               <Text style = {styles.login_button_text}>Drink Once</Text>
         </TouchableOpacity>     
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
-styles = StyleSheet.create({
-
-  register_button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    
-    backgroundColor : '#910f05',
-    
-   
-    height:60,
-    width : '100%',
-    
-},
-});
+styles = StyleSheet.create(
+  {
+    container : {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+    }
+  }  
+);
 
 
 export default Home;
