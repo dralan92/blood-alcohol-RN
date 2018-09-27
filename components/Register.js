@@ -69,8 +69,9 @@ class Register extends Component {
         <TouchableOpacity
               style = {styles.register_button}
               onPress={() => {
-                            //this.props.navigation.navigate('Home',this.state);
+                            
                             this.registerAction();
+                            this.props.navigation.navigate('Login');
                               }
                           
                       }
