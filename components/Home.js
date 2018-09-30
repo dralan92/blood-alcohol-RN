@@ -60,7 +60,7 @@ class Home extends Component {
         
         this.processAlcoholWithTime()
       
-      }, 1);
+      }, 100);
     }
     upDateDB(id, goa){
       update_data = [
