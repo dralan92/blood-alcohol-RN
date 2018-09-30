@@ -37,6 +37,34 @@ class Home extends Component {
     
 
       const { navigation } = this.props;
+      const id_to_fetch = navigation.getParam('_id', 'x');
+      const url_id = 'https://infinite-temple-91100.herokuapp.com/drinkers/'+ id_to_fetch;
+      
+      fetch(url_id)
+        .then(res=>res.json())
+        .then(data=> {
+          console.log(data);
+          this.setState({
+            id: data._id,
+            name : data.name,
+            email : data.email,
+            password : data.password,
+            phone : data.phone,
+            age : data.age,
+            gender : data.gender,
+            weight : data.weight,
+            liters_of_blood : data.liters_of_blood,
+            grams_of_alcohol : data.grams_of_alcohol,
+            alcohol_removal_rate : data.alcohol_removal_rate,
+            current_time : data.current_time,
+            last_drink_time : data.last_drink_time,
+            time_past : data.time_past,
+            sober_time : data.sober_time,
+            status : data.status
+
+          });
+          
+        });
       
 
       this.setState({
@@ -60,7 +88,7 @@ class Home extends Component {
         
         this.processAlcoholWithTime()
       
-      }, 100);
+      }, 1);
     }
     upDateDB(id, goa){
       update_data = [
