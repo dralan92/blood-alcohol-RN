@@ -43,7 +43,7 @@ class Home extends Component {
       fetch(url_id)
         .then(res=>res.json())
         .then(data=> {
-          console.log(data);
+         
           this.setState({
             id: data._id,
             name : data.name,
@@ -65,9 +65,11 @@ class Home extends Component {
           });
           
         });
+
+        
       
 
-      this.setState({
+     /* this.setState({
         id : navigation.getParam('_id', 'x'),
         name : navigation.getParam('name', 'x'),
         email : navigation.getParam('email', 'x'),
@@ -81,19 +83,33 @@ class Home extends Component {
         status : 'Sober'
 
 
-      });
+      });*/
       
       
       this.interval = setInterval(() => {
+        let last_rec_time =  moment(this.state.last_drink_time).format('HH:mm:ss:SSS');
         
-        this.processAlcoholWithTime()
+        console.log(last_rec_time);
+       
+        let time_passed_in_ms = moment().diff(this.state.last_drink_time, 'milliseconds');
+        console.log(time_passed_in_ms);
+        let alcohol_burned = this.state.alcohol_removal_rate*time_passed_in_ms;
+        console.log(alcohol_burned);
+        let new_goa = this.state.grams_of_alcohol - alcohol_burned;
+        this.setState({
+          grams_of_alcohol : new_goa
+        });
+
+       
+
+       this.processAlcoholWithTime()
       
       }, 1);
     }
     upDateDB(id, goa){
       update_data = [
         {propName : "grams_of_alcohol", value : parseFloat(goa) },
-        {propName : "last_drink_time", value : moment().format('x')}
+        {propName : "last_drink_time", value : moment()}
         
       ];
       let update_url = 'https://infinite-temple-91100.herokuapp.com/drinkers/'+id;
@@ -129,6 +145,7 @@ class Home extends Component {
     
 
     processAlcoholWithTime(){
+     
       
       let prev_alcohol = this.state.grams_of_alcohol;
       if(parseFloat(prev_alcohol) > 0){
