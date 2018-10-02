@@ -22,7 +22,8 @@ class Home extends Component {
         last_drink_time : moment().format('x'),
         time_past : 0,
         sober_time : '',
-        status : ''
+        status : '',
+        state_corrected : 'false'
 
     }
   }
@@ -44,6 +45,9 @@ class Home extends Component {
         .then(res=>res.json())
         .then(data=> {
          
+          if(typeof(data.grams_of_alcohol) == "undefined"){
+            data.grams_of_alcohol = 0;
+          }
           this.setState({
             id: data._id,
             name : data.name,
@@ -54,15 +58,17 @@ class Home extends Component {
             gender : data.gender,
             weight : data.weight,
             liters_of_blood : data.liters_of_blood,
-            grams_of_alcohol : data.grams_of_alcohol,
+            grams_of_alcohol : parseFloat(data.grams_of_alcohol),
             alcohol_removal_rate : data.alcohol_removal_rate,
             current_time : data.current_time,
             last_drink_time : data.last_drink_time,
             time_past : data.time_past,
             sober_time : data.sober_time,
-            status : data.status
+            status : data.status,
+            state_corrected : 'false'
 
           });
+          console.log(this.state.grams_of_alcohol);
           
         });
 
@@ -87,19 +93,26 @@ class Home extends Component {
       
       
       this.interval = setInterval(() => {
-        let last_rec_time =  moment(this.state.last_drink_time).format('HH:mm:ss:SSS');
-        
-        console.log(last_rec_time);
-       
-        let time_passed_in_ms = moment().diff(this.state.last_drink_time, 'milliseconds');
-        console.log(time_passed_in_ms);
-        let alcohol_burned = this.state.alcohol_removal_rate*time_passed_in_ms;
-        console.log(alcohol_burned);
-        let new_goa = this.state.grams_of_alcohol - alcohol_burned;
-        this.setState({
-          grams_of_alcohol : new_goa
-        });
 
+        if(this.state.grams_of_alcohol > 0){
+            if(this.state.state_corrected == 'false'){
+                let last_rec_time =  moment(this.state.last_drink_time).format('HH:mm:ss:SSS');
+            
+                console.log(last_rec_time);
+              
+                let time_passed_in_ms = moment().diff(this.state.last_drink_time, 'milliseconds');
+                console.log(time_passed_in_ms);
+                let alcohol_burned = this.state.alcohol_removal_rate*time_passed_in_ms;
+                console.log(alcohol_burned);
+                let new_goa = this.state.grams_of_alcohol - alcohol_burned;
+                this.setState({
+                  grams_of_alcohol : new_goa,
+                  state_corrected : 'true'
+                });
+            }
+            
+        }
+    
        
 
        this.processAlcoholWithTime()
@@ -170,11 +183,9 @@ class Home extends Component {
      
       //Store values to data base
       
-      if(parseFloat(prev_alcohol) > 0){
+      
         this.upDateDB(this.state.id, this.state.grams_of_alcohol)
-      }else{
-
-      }
+      
       
       
     }
