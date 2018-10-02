@@ -68,7 +68,7 @@ class Home extends Component {
             state_corrected : 'false'
 
           });
-          console.log(this.state.grams_of_alcohol);
+        
           
         });
 
@@ -98,12 +98,11 @@ class Home extends Component {
             if(this.state.state_corrected == 'false'){
                 let last_rec_time =  moment(this.state.last_drink_time).format('HH:mm:ss:SSS');
             
-                console.log(last_rec_time);
-              
+               
                 let time_passed_in_ms = moment().diff(this.state.last_drink_time, 'milliseconds');
-                console.log(time_passed_in_ms);
+                
                 let alcohol_burned = this.state.alcohol_removal_rate*time_passed_in_ms;
-                console.log(alcohol_burned);
+                
                 let new_goa = this.state.grams_of_alcohol - alcohol_burned;
                 this.setState({
                   grams_of_alcohol : new_goa,
@@ -117,7 +116,7 @@ class Home extends Component {
 
        this.processAlcoholWithTime()
       
-      }, 1);
+      }, 100);
     }
     upDateDB(id, goa){
       update_data = [
@@ -162,7 +161,7 @@ class Home extends Component {
       
       let prev_alcohol = this.state.grams_of_alcohol;
       if(parseFloat(prev_alcohol) > 0){
-        let new_alcohol = parseFloat(prev_alcohol) - parseFloat(this.state.alcohol_removal_rate);
+        let new_alcohol = parseFloat(prev_alcohol) - parseFloat(this.state.alcohol_removal_rate)*100;
 
       
         this.setState({
@@ -196,17 +195,19 @@ class Home extends Component {
     
   render() {
    
-    
+    let time_to_sober = (((parseFloat(this.state.grams_of_alcohol)/parseFloat(this.state.alcohol_removal_rate))/1000)/60)/60;
 
     return (
       <KeyboardAvoidingView behavior = 'padding' style = {styles.container}>
         <Text>Hello {this.state.name}</Text>
-        <Text>you have  {this.state.liters_of_blood} liters of blood</Text>
-        <Text>your alcohol removal rate is  {this.state.alcohol_removal_rate} grams per milli second</Text>
-        <Text>Last Drink Time is  {this.state.last_drink_time} </Text>
+       
+        
+        
         <Text>Amount of alcohol in your body is{this.state.grams_of_alcohol} grams</Text>
-        <Text>{this.state.time_past} total milli sec drunk</Text>
+       
         <Text>BAC : {parseFloat(this.state.grams_of_alcohol)/(100* parseFloat(this.state.liters_of_blood))} </Text>
+        <Text>Time to Sober : {time_to_sober} hours</Text>
+
 
         <TouchableOpacity
               style = {styles.register_button}
@@ -218,7 +219,7 @@ class Home extends Component {
                             }
                       }
               >
-              <Text style = {styles.login_button_text}>Drink Once</Text>
+              <Text style = {styles.button_text}>Drink Once</Text>
         </TouchableOpacity>     
       </KeyboardAvoidingView>
     )
@@ -230,6 +231,20 @@ styles = StyleSheet.create(
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-around',
+    },
+
+    register_button : {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor : '#910f05',
+      height:100,
+      width : '100%'
+    },
+
+    button_text : {
+      color : 'white',
+    fontSize: 15,
+    fontWeight: 'bold'
     }
   }  
 );
